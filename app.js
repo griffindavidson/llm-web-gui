@@ -16,22 +16,33 @@ app.listen(PORT, function () {
 });
 
 app.post('/chat', async (req, res) => {
-	try {
-	  // No need to stringify the message, just use it directly
-	  const userMessages = req.body.messages;
-  
-	  // Send the message to Ollama API
-	  const response = await ollama.chat({
-		model: process.env.MODEL,
-		messages: userMessages  // Pass as an object with role and content
-	  });
-  
-	  // Send the response back to the frontend
-	  res.json({ reply: response.message.content });
-  
-	} catch (error) {
-	  console.error(error);
-	  res.status(500).json({ error: 'Something went wrong with the AI request.' });
-	}
+    try {
+        const userMessages = req.body.messages;
+
+        // Set the appropriate headers for streaming
+        res.setHeader('Content-Type', 'application/json');
+        res.flushHeaders(); // This is needed to ensure that the connection remains open
+
+        // Send the message to Ollama API
+        const response = await ollama.chat({
+            model: process.env.MODEL,
+            messages: userMessages,
+            stream: true
+        });
+
+        // Stream each part of the response
+        for await (const part of response) {
+            // Send the current part to the frontend
+            res.write(JSON.stringify({ reply: part.message.content, done: part.done }));
+
+            // If the message is finished (done), end the stream
+            if (part.done) {
+                res.end(); // Close the connection after all parts are sent
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Something went wrong with the AI request.' });
+    }
 });
   
