@@ -73,10 +73,6 @@
     background-color: grey;
 }
 
-.bold {
-    font-weight: bold;
-}
-
 @media(prefers-color-scheme: dark) {
     .chat-history, body {
         background-color: #121212;

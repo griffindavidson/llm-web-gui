@@ -60,7 +60,8 @@ async function sendMessage() {
 
         let reply = data.reply;
         reply = reply.replace(/<think>(.*?)<\/think>/gs, '');
-        reply = reply.replace(/\*\*(.*?)\*\*/gs, `<span class="bold">$1</span>`);
+        reply = reply.replace(/(\n\s*-|\n\s*\d+\.)/g, "<br><br>$1");
+        reply = reply.replace(/\*\*(.*?)\*\*/gs, `<span style="font-weight: bold;">$1</span>`);
         reply = reply.trim();
 
         // Display AI response in chat history
