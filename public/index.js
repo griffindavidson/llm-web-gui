@@ -44,6 +44,7 @@ async function sendMessage() {
         window.scrollTo(0, document.body.scrollHeight);
 
         userMessage.value = '';
+        submitButton.disabled = true;
 
         // Add message to array and save to sessionStorage
         messages.push({ role: "user", content: message });
