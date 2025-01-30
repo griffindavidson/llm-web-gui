@@ -17,6 +17,21 @@ userMessage.addEventListener("keydown", function(event) {
     }
 });
 
+window.onload = function() {
+    const storedMessages = sessionStorage.getItem('chatHistory');
+
+    if (storedMessages) {
+        messages = JSON.parse(storedMessages);
+    }
+
+    messages.forEach(message => {
+        const block = document.createElement('div');
+        block.classList.add('block', message.role === 'user' ? 'user' : 'ai');
+        block.textContent = message.content;
+        history.appendChild(block);
+    });
+}
+
 async function sendMessage() {
     const message = userMessage.value.trim();
 
@@ -26,6 +41,7 @@ async function sendMessage() {
         block.classList.add('block', 'user');
         block.textContent = message;
         history.appendChild(block);
+        window.scrollTo(0, document.body.scrollHeight);
 
         userMessage.value = '';
 
@@ -42,31 +58,22 @@ async function sendMessage() {
 
         const data = await response.json();
 
+        let reply = data.reply;
+        reply = reply.replace(/<think>(.*?)<\/think>/gs, '');
+        reply = reply.replace(/\*\*(.*?)\*\*/gs, `<span class="bold">$1</span>`);
+        reply = reply.trim();
+
         // Display AI response in chat history
         const aiMessageDiv = document.createElement('div');
         aiMessageDiv.classList.add('block', 'ai');
-        aiMessageDiv.textContent = data.reply;
+        aiMessageDiv.innerHTML = reply;
         history.appendChild(aiMessageDiv);
+        window.scrollTo(0, document.body.scrollHeight);
 
         // Add AI response to messages and save again
-        messages.push({ role: "assistant", content: data.reply });
+        messages.push({ role: "assistant", content: reply });
         sessionStorage.setItem("chatHistory", JSON.stringify(messages));
     } else {
         console.log("ERROR: Blank or Null message");
     }
-}
-
-window.onload = function() {
-    const storedMessages = sessionStorage.getItem('chatHistory');
-
-    if (storedMessages) {
-        messages = JSON.parse(storedMessages);
-    }
-
-    messages.forEach(message => {
-        const block = document.createElement('div');
-        block.classList.add('block', message.role === 'user' ? 'user' : 'ai');
-        block.textContent = message.content;
-        history.appendChild(block);
-    });
 }

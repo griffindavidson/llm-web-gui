@@ -73,6 +73,10 @@
     background-color: grey;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 @media(prefers-color-scheme: dark) {
     .chat-history, body {
         background-color: #121212;
@@ -83,11 +87,16 @@
     }
 
     .user {
-        background-color: rgba(0, 25 150, 1);
+        background-color: rgb(75, 75, 200);
+        color: rgb(200, 200, 200);
     }
 
     .message {
         background-color: darkgrey;
         color: black;
+    }
+
+    .message::placeholder {
+        color: lightgrey;
     }
 }
