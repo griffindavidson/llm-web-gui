@@ -11,6 +11,7 @@ A web GUI for interacting with locally-run LLMs, (DeekSeek for example)
 3. Add .env with the entry `MODEL='<model name here>'`
 4. Run `npm install`
 5. Run `node app.js`
+6. On a web browser, navigate to `https://localhost:3000`
 
 ## Other Tidbits
 
