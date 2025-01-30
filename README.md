@@ -1,7 +1,7 @@
 # llm-web-gui
 A web GUI for interacting with locally-run LLMs, (DeekSeek for example)
 
-![Screenshot showing DeepSeek](https://imgur.com/2830kQR)
+![Screenshot showing DeepSeek](./asssets/screenshot.jpeg)
 
 ## Instructions
 
