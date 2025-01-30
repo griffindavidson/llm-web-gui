@@ -1,20 +1,18 @@
 let messages = [];
 const userMessage = document.getElementById('message');
-const submitButton = document.getElementById('submit');
 const history = document.querySelector('.chat-history');
 
-userMessage.addEventListener("input", () => {
-    submitButton.disabled = userMessage.value.trim() === "";
-});
-
 userMessage.addEventListener("keydown", function(event) {
-    if (event.key === "Enter" && !submitButton.disabled) {
+    if (event.key === "Enter") {
+        event.preventDefault();
         sendMessage();
+        userMessage.value = '';
     }
 });
 
 window.onload = function() {
     const storedMessages = sessionStorage.getItem('chatHistory');
+    userMessage.value = '';
 
     if (storedMessages) {
         messages = JSON.parse(storedMessages);
@@ -23,26 +21,46 @@ window.onload = function() {
     messages.forEach(message => {
         const block = document.createElement('div');
         block.classList.add('block', message.role === 'user' ? 'user' : 'ai');
-        block.textContent = message.content;
+        block.innerHTML += message.content;
+        addName(block);
         history.appendChild(block);
     });
+}
+
+function addName(parent) {
+    let name = document.createElement('div');
+    name.classList.add('name');
+
+    name.style.position = "absolute";
+    name.style.left = `0`;
+    name.style.top = `-1rem`;
+    name.style.fontSize = `0.75rem`;
+
+    if (parent.classList.contains('user')) {
+        name.textContent = "You";
+    } else {
+        name.textContent = "Assistant";
+    }
+
+    name.style.color = `#676767`;
+
+    parent.appendChild(name);
 }
 
 async function sendMessage() {
     const message = userMessage.value.trim();
     let reply = ''; // Stores the filtered content to display
-    let replyCopy = ''; // Stores the unfiltered content to save in history
 
     if (message !== "") {
         // Display user message in chat history
         const block = document.createElement('div');
         block.classList.add('block', 'user');
         block.textContent = message;
+        addName(block);
         history.appendChild(block);
         window.scrollTo(0, document.body.scrollHeight);
 
         userMessage.value = '';
-        submitButton.disabled = true;
 
         // Add message to array and save to sessionStorage
         messages.push({ role: "user", content: message });
@@ -60,6 +78,7 @@ async function sendMessage() {
         let partialResponse = '';  // Store the accumulated response
         let aiMessageDiv = document.createElement('div');
         aiMessageDiv.classList.add('block', 'ai');
+        addName(aiMessageDiv);
         document.querySelector('.chat-history').appendChild(aiMessageDiv);
 
         // Function to update the chat UI with new content
@@ -92,11 +111,10 @@ async function sendMessage() {
                         console.error('Error parsing chunk:', error);
                         continue;  // Skip if it's still an invalid JSON object
                     }
-
-                    // Save unfiltered reply to `replyCopy` before modifying it
+                    
                     if (!part.done) {
-                        replyCopy += part.reply; // Collect unfiltered message
-                        updateChatUI(part.reply); // Display the raw message (for now)
+                        reply += part.reply;
+                        updateChatUI(part.reply);
                     }
                 }
             } catch (error) {
@@ -106,14 +124,26 @@ async function sendMessage() {
         }
 
         // Apply text filtering after message is complete
-        reply = replyCopy.replace(/<think>(.*?)<\/think>/gs, ''); // Remove <think> tags
+        reply = reply.replace(/<think>(.*?)<\/think>/gs, ''); // Remove <think> tags
         reply = reply.replace(/(\n\s*-|\n\s*\d+\.)/g, "<br><br>$1"); // Handle list formatting
         reply = reply.replace(/\*\*(.*?)\*\*/gs, `<span style="font-weight: bold;">$1</span>`); // Bold text
-
+        reply = reply.replace(/```([\s\S]*?)```/g, (code) => {
+            // Escape HTML characters inside code block
+            const escapedCode = code
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        
+            return `<pre><code>${escapedCode}</code></pre>`;
+        });
+        
         aiMessageDiv.innerHTML = reply; // Update UI with the filtered content
+        addName(aiMessageDiv);
 
         // Add AI response to messages and save again
-        messages.push({ role: "assistant", content: replyCopy }); // Save unfiltered message to history
+        messages.push({ role: "assistant", content: reply }); // Save unfiltered message to history
         sessionStorage.setItem("chatHistory", JSON.stringify(messages));
     } else {
         console.log("ERROR: Blank or Null message");

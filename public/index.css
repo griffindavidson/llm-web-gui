@@ -1,30 +1,20 @@
+body {
+    background: #eee;
+}
+
 .chat-history {
-    background-color: white;
-    width: min(100%, 400px);
     display: flex;
     flex-direction: column;
-    margin: 20px auto 80px;
-
+    align-items: center;
+    margin: 40px 1rem 100px 1rem;
 }
 
 .block {
-    max-width: 300px;
+    width: min(100%, 600px);
     height: fit-content;
     border-radius: 10px;
-    padding: 5px;
-    margin-bottom: 5px;
-}
-
-.ai {
-    background-color: lightgrey;
-    color: black;
-    align-self: flex-start;
-}
-
-.user {
-    background-color: rgb(100, 200, 255);
-    color: white;
-    align-self: flex-end;
+    position: relative;
+    margin-bottom: 35px;
 }
 
 .message-box {
@@ -42,12 +32,18 @@
 
 .message {
     width: min(90%, 50ch);
-    min-height: 40px;
+    min-height: 5rem;
     height: auto; /* Optional: Set a minimum height */
-    padding: 10px;
+    padding: 1rem;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: none;
     font-size: 1rem;
+    resize: none;
+    margin: 1rem;
+}
+
+.message:focus {
+    outline: none;
 }
 
 .submit {
@@ -73,18 +69,17 @@
     background-color: grey;
 }
 
+.block > .name {
+    color: #444;
+}
+
 @media(prefers-color-scheme: dark) {
     .chat-history, body {
-        background-color: #121212;
+        background-color: #333;
     }
 
-    .ai {
-        background-color: grey;
-    }
-
-    .user {
-        background-color: rgb(75, 75, 200);
-        color: rgb(200, 200, 200);
+    .block {
+        color: whitesmoke;
     }
 
     .message {

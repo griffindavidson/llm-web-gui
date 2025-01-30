@@ -2,7 +2,6 @@
 A web GUI for interacting with locally-run LLMs, (DeekSeek for example)
 
 ![Screenshot showing DeepSeek](./asssets/screenshot.jpeg)
-![Second Screenshot](./asssets/screenshot2.jpeg)
 
 ## Instructions
 
