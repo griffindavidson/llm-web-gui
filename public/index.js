@@ -30,8 +30,8 @@ window.onload = function() {
 
 async function sendMessage() {
     const message = userMessage.value.trim();
-    let reply = '';
-    let replyCopy = reply;
+    let reply = ''; // Stores the filtered content to display
+    let replyCopy = ''; // Stores the unfiltered content to save in history
 
     if (message !== "") {
         // Display user message in chat history
@@ -93,30 +93,27 @@ async function sendMessage() {
                         continue;  // Skip if it's still an invalid JSON object
                     }
 
-                    // check if part has message or is last
+                    // Save unfiltered reply to `replyCopy` before modifying it
                     if (!part.done) {
-                        // Display the updated content in the chat
-                        updateChatUI(part.reply);
-                        reply += part.reply;
+                        replyCopy += part.reply; // Collect unfiltered message
+                        updateChatUI(part.reply); // Display the raw message (for now)
                     }
                 }
             } catch (error) {
                 console.error('Error reading the stream:', error);
                 break; // Exit the loop if there is an error
             }
-
-            // Apply text filtering after message is complete
-            // ## TODO: Apply text filtering dyanmically
-            // Handle <think> tag to prevent showing unnecessary content
-            replyCopy = reply;
-            reply = reply.replace(/<think>(.*?)<\/think>/gs, '');
-            reply = reply.replace(/(\n\s*-|\n\s*\d+\.)/g, "<br><br>$1");
-            reply = reply.replace(/\*\*(.*?)\*\*/gs, `<span style="font-weight: bold;">$1</span>`);
-            aiMessageDiv.innerHTML = reply;
         }
 
+        // Apply text filtering after message is complete
+        reply = replyCopy.replace(/<think>(.*?)<\/think>/gs, ''); // Remove <think> tags
+        reply = reply.replace(/(\n\s*-|\n\s*\d+\.)/g, "<br><br>$1"); // Handle list formatting
+        reply = reply.replace(/\*\*(.*?)\*\*/gs, `<span style="font-weight: bold;">$1</span>`); // Bold text
+
+        aiMessageDiv.innerHTML = reply; // Update UI with the filtered content
+
         // Add AI response to messages and save again
-        messages.push({ role: "assistant", content: replyCopy });
+        messages.push({ role: "assistant", content: replyCopy }); // Save unfiltered message to history
         sessionStorage.setItem("chatHistory", JSON.stringify(messages));
     } else {
         console.log("ERROR: Blank or Null message");
