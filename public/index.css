@@ -1,0 +1,93 @@
+.chat-history {
+    background-color: white;
+    width: min(100%, 400px);
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto 80px;
+
+}
+
+.block {
+    max-width: 300px;
+    height: fit-content;
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.ai {
+    background-color: lightgrey;
+    color: black;
+    align-self: flex-start;
+}
+
+.user {
+    background-color: rgb(100, 200, 255);
+    color: white;
+    align-self: flex-end;
+}
+
+.message-box {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: fit-content;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(5px);
+}
+
+.message {
+    width: min(90%, 50ch);
+    min-height: 40px;
+    height: auto; /* Optional: Set a minimum height */
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.submit {
+    all: unset;
+    width: fit-content;
+    height: 1.5rem;
+    background-color: blue;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin: 10px 10px 10px 5px;
+    border-radius: 10px;
+}
+
+.submit:hover {
+    background-color: aqua;
+}
+
+.submit:active {
+    background-color: lightblue;
+}
+
+.submit:disabled {
+    background-color: grey;
+}
+
+@media(prefers-color-scheme: dark) {
+    .chat-history, body {
+        background-color: #121212;
+    }
+
+    .ai {
+        background-color: grey;
+    }
+
+    .user {
+        background-color: rgba(0, 25 150, 1);
+    }
+
+    .message {
+        background-color: darkgrey;
+        color: black;
+    }
+}

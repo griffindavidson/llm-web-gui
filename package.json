@@ -1,0 +1,16 @@
+{
+  "name": "llm-web-gui",
+  "version": "1.0.0",
+  "description": "DeekSeek Web Graphical UI",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Griffin Davidson",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "ollama": "^0.5.12"
+  }
+}
