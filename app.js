@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, function () {
-	console.log("Started application on port %d", PORT);
+	console.log("Started application on http://localhost:%d", PORT);
 });
 
 app.post('/chat', async (req, res) => {
