@@ -88,6 +88,6 @@ body {
     }
 
     .message::placeholder {
-        color: lightgrey;
+        color: rgb(100, 100, 100);
     }
 }
