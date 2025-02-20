@@ -131,3 +131,4 @@ dist
 
 # macOS Junk
 .DS_Store
+.vscode
